@@ -1,5 +1,5 @@
 <div class='row'>
-  <div class="col-lg-6 col-xl-4">
+  <div class="col-lg-6 col-xl-6">
     <div class="card">
       <div class="card-header">
         <h3 class="card-title"><%=t :keywords%></h3>
@@ -8,7 +8,7 @@
         <div id="chart-pie" style="height: 16rem"></div>
       </div>
     </div>
-    <% @t = Tagging.where(taggable_type: 'Article', target_type: 'Keyword').group(:target_id).order('count_id desc').count('id')%>
+    <% @t = Tagging.where('taggable_type = ? AND target_type = ? AND target_id NOT IN (?)', 'Article', 'Keyword', [14, 15]).group(:target_id).order('count_id desc').count('id')%>
     <script>
     function randomValueOf( obj ) {
       var keys = Object.keys(obj);
@@ -19,7 +19,6 @@
     }
 
     $(document).ready(function(){
-      console.log(randomValueOf(tabler.colors));
       var chart = c3.generate({
         bindto: '#chart-pie', // id of chart wrapper
         data: {
@@ -36,7 +35,7 @@
           },
           names: {
             <% @t.each do |k,v|%>
-            'data<%= k%>': '<%= Keyword.find(v).title%>',
+            'data<%= k%>': '<%= Keyword.find(k).title%>',
             <%end%>
           }
         },
@@ -53,8 +52,110 @@
     });
     </script>
   </div>
-
   <div class="col-lg-6 col-xl-4">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"><%=t :tones%></h3>
+    </div>
+    <div class="card-body">
+      <div id="chart-donut" style="height: 16rem"></div>
+    </div>
+  </div>
+  <% @positive = Tagging.where(taggable_type: 'Article', target_type: 'Keyword', target_id: 14 ).count%>
+  <% @negative = Tagging.where(taggable_type: 'Article', target_type: 'Keyword', target_id: 15 ).count%>
+  <% @neutral = Tagging.where('taggable_type = ? AND target_type = ? AND target_id NOT IN (?)', 'Article', 'Keyword', [14,15]).count%>
+  <script>
+      $(document).ready(function(){
+        var chart = c3.generate({
+          bindto: '#chart-donut', // id of chart wrapper
+          data: {
+            columns: [
+                // each columns data
+              ['data0', <%= @neutral%>],
+              ['data1', <%= @negative%>],
+              ['data2', <%= @positive%>]
+            ],
+            type: 'donut', // default type of chart
+            colors: {
+              'data0': tabler.colors["gray"],
+              'data1': tabler.colors["red-light"],
+              'data2': tabler.colors["green-light"]
+            },
+            names: {
+                // name of each serie
+              'data0': '<%=t :neutral%>',
+              'data1': '<%=t :negative%>',
+              'data2': '<%=t :positive%>'
+            }
+          },
+          axis: {
+          },
+          legend: {
+                    show: false, //hide legend
+          },
+          padding: {
+            bottom: 0,
+            top: 0
+          },
+        });
+      });
+  </script>
+</div>
+
+</div>
+<div class='row'>
+  <div class="col-lg-12">
+   <div class="card">
+     <div class="card-header">
+       <h3 class="card-title"><%=t :comments_date_histogram%></h3>
+     </div>
+     <div class="card-body">
+       <div id="chart-spline" style="height: 16rem"></div>
+     </div>
+   </div>
+   <% @dating = Dating.group(:event_date).order('event_date desc').count('id')%>
+   <script>
+       $(document).ready(function(){
+         var chart = c3.generate({
+           bindto: '#chart-spline', // id of chart wrapper
+           data: {
+             columns: [
+               ['data1', <%= @dating.values.join(',')%>]
+                 // each columns data
+                         ],
+             labels: true,
+             type: 'spline', // default type of chart
+             colors: {
+               'data1': tabler.colors["green"]
+             },
+             names: {
+                 // name of each serie
+               'data1': '<%=t :comment_date%>',
+             }
+           },
+           axis: {
+             x: {
+               type: 'category',
+               // name of each category
+               categories: [<%= raw @dating.keys.map{ |e| "'#{e}'" }.join(',')%>]
+             },
+           },
+           legend: {
+                     show: false, //hide legend
+           },
+           padding: {
+             bottom: 0,
+             top: 0
+           },
+         });
+       });
+
+ </script>
+ </div>
+</div>
+<div class="row">
+
+  <div class="col-lg-6 col-xl-6">
     <div class="card">
       <div class="card-header">
         <h3 class="card-title"><%=t :workflows%></h3>
@@ -118,4 +219,52 @@
     });
     </script>
   </div>
+
+  <div class="col-lg-6 col-xl-4">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"><%=t :keywordـrepetitions%></h3>
+    </div>
+    <div class="card-body">
+      <div id="chart-bar" style="height: 16rem"></div>
+    </div>
+  </div>
+  <% @s = Tagging.where('taggable_type = ? AND target_type = ? AND target_id NOT IN (?)', 'Article', 'Keyword', [14, 15]).group(:target_id).count('id')%>
+  <script>
+      $(document).ready(function(){
+        var chart = c3.generate({
+          bindto: '#chart-bar', // id of chart wrapper
+          data: {
+            columns: [
+
+                // each columns data
+              ['data1', <%= @s.values.join(',')%>]
+            ],
+            type: 'bar', // default type of chart
+            colors: {
+              'data1': tabler.colors["black"]
+            },
+            names: {
+                // name of each serie
+              'data1': '<%=t :keywords%>',
+            }
+          },
+          axis: {
+            x: {
+              type: 'category',
+              // name of each category
+              categories: [<%=raw @s.keys.map { |i| "'" + Keyword.find(i).title + "'" }.join(",")%>]
+            },
+          },
+          legend: {
+                    show: false, //hide legend
+          },
+          padding: {
+            bottom: 0,
+            top: 0
+          },
+        });
+      });
+  </script>
+</div>
 </div>

@@ -1,4 +1,4 @@
-<%= render partial: 'articles/progress_bar', locals: {article: @article, active: ['titles']}%>
+<% render partial: 'articles/progress_bar', locals: {article: @article, active: ['titles']}%>
 <%= form_for(@article, html: {class: 'card'}) do |f| %>
 <div class="card-header">
   <h3 class="card-title"><%=t :titles_and_workflows %></h3>
@@ -44,32 +44,119 @@
   </div>
   </div>
 
-  <% if permit_by_workflow(@article, current_user,'title')%>
-  <hr class="mt-2 mb-4"/>
+  <% if permit_by_workflow(@article, current_user,'keywords')%>
+  <div class="form-group">
+    <label class="form-label"><%=t :keywords%></label>
+    <input type="text" class="form-control" id="input-tags" value="" data-data='<%= raw @keywords.to_json%>'>
+  </div>
+  <%= hidden_field_tag :keyword, ','+@keyword_ids.map(&:inspect).join(',') %>
+  <%end%>
+
+  <% if permit_by_workflow(@article, current_user,'content')%>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <%= f.label :content, class: "form-label" %>
+        <%= f.cktext_area :content, id: 'sometext' %>
+      </div>
+    </div>
+  </div>
+  <%end%>
+  <script>
+    CKEDITOR.replace('sometext')
+  </script>
 
   <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-12">
       <div class="form-group">
-        <%= f.label :title, class: "form-label" %>
-        <%= f.text_field :title , class: "form-control",  required: '',  oninvalid: "this.setCustomValidity(this.willValidate ? '' :'#{t(:please_enter_data_in_this_field)}')" %>
+        <label class="form-label"><%=t :comment_author%></label>
+        <% if @article.contributions.blank?%>
+        <%=t :unkown%>
+        <%else%>
+        <% for contribution in @article.contributions%>
+        <span class="tag">
+          <span class="tag-avatar avatar" style="background-image: url('/assets/noimage-35-tiny.jpg')"></span>
+          <%= truncate(contribution.profile.stage_name, length: 15)%>
+        </span>
+          <%= %>
+        <%end%>
+        <%end%>
       </div>
     </div>
   </div>
 
-  <div class="alert alert-warning" role="alert">
-    <%=t :other_titles%>
-    <%= link_to '/titlings/add_item/1', remote: true do%>
-    <i class="fe fe-plus-circle" style="vertical-align:-3px;"></i>
-    <%end%>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label class="form-label"><%=t :datings%></label>
+        <% if @article.datings.blank?%>
+        <%=t :unkown%>
+        <%else%>
+        <% for dating in @article.datings%>
+        <%= dating.article_event.title%>:
+          <span>	<% @jalali = JalaliDate.to_jalali(dating.event_date)%>
+            <%= @jalali.year%>/<%= @jalali.month%>/<%= @jalali.day%></span>
+
+        <%end%>
+        <%end%>
+      </div>
+    </div>
   </div>
 
-  <div id='titling-items'>
-    <% for titling in @article.titlings%>
-    <%= render partial: 'titlings/remote_item', locals: {titling: titling}%>
+  <% if permit_by_workflow(@article, current_user,'language')%>
+<div class="form-group">
+  <div class="form-label"><%=t :languages%></div>
+  <div>
+    <% for language in Language.all%>
+    <%@speaking = Speaking.where(article_id: @article.id, language_id: language.id).first%>
+    <label class="custom-control custom-checkbox custom-control-inline">
+      <input type="checkbox" class="custom-control-input" id="language_<%= language.id %>" <% if !@speaking.blank?%>checked<%end%> value="<%= language.id %>">
+      <span class="custom-control-label" style='padding-right: 23px;padding-top: 2px;'><%= language.title%></span>
+    </label>
+    <script>
+    $('#language_<%= language.id%>').change(function() {
+      if($(this).is(":checked")) {
+        $.ajax({
+          url: '/speakings/remotec/1',
+          type: 'GET',
+          dataType: 'json',
+          data: {
+            article_id: <%= @article.id%>,
+            language_id: <%= language.id %>
+          },
+          error: function() {
+            $(this).attr("checked", false);
+          },
+          success: function(res) {
+            $(this).attr("checked", true);
+          }
+        });
+      } else {
+        $.ajax({
+          url: '/speakings/remoted/1',
+          type: 'GET',
+          dataType: 'json',
+          data: {
+            article_id: <%= @article.id%>,
+            language_id: <%= language.id %>
+          },
+          error: function() {
+            $(this).attr("checked", true);
+          },
+          success: function(res) {
+            $(this).attr("checked", false);
+          }
+        });
+      }
+    });
+    </script>
     <%end%>
   </div>
+</div>
 <%end%>
+
+
   <div class="card-footer text-right">
-    <button type="submit" class="btn btn-primary"><%=t :submit_and_go%></button>
+    <button type="submit" class="btn btn-primary"><%=t :submit%></button>
   </div>
   <% end %>

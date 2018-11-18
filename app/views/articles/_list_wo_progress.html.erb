@@ -2,7 +2,7 @@
   <thead>
     <tr>
       <th class="text-center"><i class="fe fe-command" style="vertical-align: -4px;"></i></th>
-      <th><%=t :title%></th>
+      <th><%=t :content%></th>
       <th><%=t :workflow_state %></th>
       <th><%=t :came_from %></th>
       <th><i class="fe fe-package"></i></th>
@@ -26,9 +26,8 @@
         </div>
       </td>
       <td>
-        <div><%= truncate(article.title, length: 30)%></div>
         <div class="small text-muted">
-          <%= truncate(article.abstract, length: 25)%>
+          <%= truncate(article.content, length: 30)%>
         </div>
       </td>
       <td>

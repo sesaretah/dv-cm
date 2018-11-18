@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181114160420) do
+ActiveRecord::Schema.define(version: 20181118073649) do
 
   create_table "access_controls", force: :cascade do |t|
     t.integer  "user_id",                      limit: 4
     t.integer  "role_id",                      limit: 4
-    t.integer  "view_unrelated_articles",      limit: 4, default: 0
+    t.integer  "view_unrelated_articles",      limit: 4
     t.integer  "view_article_logs",            limit: 4
     t.integer  "view_workflow_transactions",   limit: 4
     t.integer  "create_workflow",              limit: 4
@@ -32,8 +32,8 @@ ActiveRecord::Schema.define(version: 20181114160420) do
     t.integer  "alter_roles",                  limit: 4
     t.integer  "alter_duties",                 limit: 4
     t.integer  "alter_title_types",            limit: 4
-    t.datetime "created_at",                                         null: false
-    t.datetime "updated_at",                                         null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.integer  "alter_content_templates",      limit: 4
   end
 
@@ -138,11 +138,11 @@ ActiveRecord::Schema.define(version: 20181114160420) do
   end
 
   create_table "comments", force: :cascade do |t|
-    t.text     "content",          limit: 4294967295
+    t.string   "content",          limit: 191
     t.integer  "commentable_id",   limit: 4
     t.string   "commentable_type", limit: 255
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.integer  "user_id",          limit: 4
   end
 
@@ -300,6 +300,7 @@ ActiveRecord::Schema.define(version: 20181114160420) do
     t.integer  "avatar_file_size",    limit: 8
     t.datetime "avatar_updated_at"
     t.string   "email",               limit: 255
+    t.string   "stage_name",          limit: 255
   end
 
   create_table "roles", force: :cascade do |t|
@@ -448,23 +449,21 @@ ActiveRecord::Schema.define(version: 20181114160420) do
     t.integer  "voting_type",  limit: 4
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
-    t.integer  "article_id",   limit: 4
   end
 
   create_table "workflow_states", force: :cascade do |t|
     t.string   "title",       limit: 255
     t.integer  "workflow_id", limit: 4
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
     t.integer  "node_id",     limit: 4
-    t.text     "editable",    limit: 16777215
+    t.text     "editable",    limit: 65535
     t.integer  "refundable",  limit: 4
     t.integer  "commentable", limit: 4
     t.integer  "start_point", limit: 4
     t.integer  "end_point",   limit: 4
     t.integer  "role_id",     limit: 4
     t.integer  "votable",     limit: 4
-    t.integer  "article_id",  limit: 4
   end
 
   create_table "workflow_transitions", force: :cascade do |t|

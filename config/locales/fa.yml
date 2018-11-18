@@ -326,6 +326,17 @@ fa:
     page_gap: "&hellip;"
     previous_label: "قبلی"
     next_label: "بعدی"
+  keywordـrepetitions: 'دفعات تکرار کلمات کلیدی'
+  tones: 'لحن استخراجی'
+  neutral: 'لحن خنثی'
+  negative: 'لحن منفی'
+  positive: 'لحن مثبت'
+  comments_date_histogram: 'هیستوگرام تاریخ ابراز نظر'
+  comment_date: 'تاریخ نظر'
+  without_tag: 'بدون کلمات کلیدی'
+  unkown: 'نامشخص'
+  comment_author: 'نویسنده نظر'
+  publish_date: 'زمان انتشار'
   end_states: 'مراحل نهایی'
   not_end_states: 'در حال کار'
   reports: 'گزارشات'
@@ -459,7 +470,7 @@ fa:
   article_type: 'نوع سند'
   language: 'زبان سند'
   article_format: 'قالب سند'
-  article_source: 'منابع این سند'
+  article_source: 'منبع این سند'
   article_area: 'حوزه های این سند '
   article_detail: 'شرح سند'
   filter: 'محدود کن'

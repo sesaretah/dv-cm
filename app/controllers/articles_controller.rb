@@ -12,17 +12,9 @@ class ArticlesController < ApplicationController
     render :json => resp.to_json, :callback => params['callback']
   end
 
+
   def article_descriptors
-    @taggings = Tagging.where(taggable_id: @article.id, taggable_type: 'Article', target_type: 'Keyword')
-    @keywords = []
-    @keyword_ids = []
-    for tagging in @taggings
-      @keyword = Keyword.find_by_id(tagging.target_id)
-      if !@keyword.blank?
-        @keyword_ids << @keyword.id
-        @keywords << { 'title' => @keyword.title, 'id' => @keyword.id}
-      end
-    end
+
   end
 
   def article_related_dates
@@ -143,6 +135,16 @@ class ArticlesController < ApplicationController
 
   # GET /articles/1/edit
   def edit
+    @taggings = Tagging.where(taggable_id: @article.id, taggable_type: 'Article', target_type: 'Keyword')
+    @keywords = []
+    @keyword_ids = []
+    for tagging in @taggings
+      @keyword = Keyword.find_by_id(tagging.target_id)
+      if !@keyword.blank?
+        @keyword_ids << @keyword.id
+        @keywords << { 'title' => @keyword.title, 'id' => @keyword.id}
+      end
+    end
     @workflow_states = WorkflowState.where(role_id: current_user.current_role_id).group_by(&:workflow_id).keys
     if !@workflow_states.blank?
       @workflows = Workflow.where('id in (?)', @workflow_states )
@@ -170,7 +172,7 @@ class ArticlesController < ApplicationController
       end
     end
     respond_to do |format|
-      format.html { redirect_to '/articles/article_descriptors/'+@article.id.to_s , notice: :article_is_created }
+      format.html { redirect_to '/articles/'+@article.id.to_s , notice: :article_is_created }
     end
   end
 
@@ -195,9 +197,9 @@ class ArticlesController < ApplicationController
           end
         end
         if !params[:keyword].blank?
-          format.html { redirect_to '/articles/article_related_dates/'+@article.id.to_s, notice: :article_is_updated }
+          format.html { redirect_to '/articles/'+@article.id.to_s, notice: :article_is_updated }
         else
-          format.html { redirect_to '/articles/article_descriptors/'+@article.id.to_s, notice: 'Article was successfully updated.' }
+          format.html { redirect_to '/articles/'+@article.id.to_s, notice: 'Article was successfully updated.' }
         end
         format.json { render :show, status: :ok, location: @article }
       else

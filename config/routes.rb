@@ -106,4 +106,9 @@ Rails.application.routes.draw do
 
   match "/home/reports" => "home#reports", :via => :get
 
+  match "/apis/comments" => "apis#comments_api", :via => :post
+
+  match "/keywords/batch_keywording/:id" => "keywords#batch_keywording", :via => :get
+
+
 end

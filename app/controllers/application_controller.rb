@@ -42,6 +42,10 @@ class ApplicationController < ActionController::Base
    end
  end
 
+ def date_sanity_check(str)
+   return Date.parse str
+ end
+
  def extract_nxt_prv(article)
    @workflow_state = article.workflow_state
    @workflow = article.workflow_state.workflow
@@ -63,11 +67,11 @@ class ApplicationController < ActionController::Base
    if user.assignments.blank?
      return false
    end
-   @flag = 1
+   @flag = 0
    for assignment in user.assignments
      @ac = AccessControl.where(role_id: assignment.role_id).first
      if !@ac.blank?
-       @flag = @flag * @ac["#{ward}"].to_i
+       @flag = @flag + @ac["#{ward}"].to_i
      end
    end
    if @flag == 0
