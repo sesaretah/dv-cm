@@ -27,13 +27,17 @@
       </td>
       <td>
         <div class="small text-muted">
-          <%=  truncate(strip_tags(article.content), length: 30)%>
+          <%=  truncate(strip_tags(article.content), length: 22)%>
         </div>
       </td>
       <td>
         <% if article.workflow_state%>
-        <div class="small text-muted"><%= article.workflow_state.workflow.title%></div>
-        <div style="font-size:smaller;"><%= article.workflow_state.title%></div>
+        <div class="small text-muted">
+          <%= truncate(article.workflow_state.workflow.title, length: 15)%>
+        </div>
+        <div style="font-size:smaller;">
+          <%= truncate(article.workflow_state.title, length: 10)%>
+        </div>
         <%else%>
         <div class="small text-muted"><i class="fe fe-alert-triangle" style="vertical-align:-3px;"></i> <%=t :without_workflow%></div>
         <%end%>
