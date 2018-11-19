@@ -32,7 +32,6 @@ class HomeController < ApplicationController
 
   def restrict_articles
     @h = {
-          'profile_ids'        => [],
           'language_ids'       => [],
           'article_type_ids'   => [],
           'article_format_ids' => [],
@@ -42,8 +41,6 @@ class HomeController < ApplicationController
     params.each do |name, value|
       @model = name.split('_')[0]
       case @model
-      when 'Profile'
-        @h['profile_ids']       << value.to_i
       when 'Language'
         @h['language_ids']      << value.to_i
       when 'ArticleType'
@@ -61,7 +58,6 @@ class HomeController < ApplicationController
 
   def group_articles(with_hash)
     @result  = {
-      'Profile'       => grouper(Article, params[:q], 'profile_ids',  with_hash),
       'Language'      => grouper(Article, params[:q], 'language_ids', with_hash) ,
       'ArticleType'   => grouper(Article, params[:q], 'article_type_ids', with_hash),
       'ArticleFormat' => grouper(Article, params[:q], 'article_format_ids', with_hash),
