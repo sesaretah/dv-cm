@@ -326,6 +326,7 @@ fa:
     page_gap: "&hellip;"
     previous_label: "قبلی"
     next_label: "بعدی"
+  nothing_found: 'سندی پیدا نشد'
   keywordـrepetitions: 'دفعات تکرار کلمات کلیدی'
   tones: 'لحن استخراجی'
   neutral: 'لحن خنثی'
