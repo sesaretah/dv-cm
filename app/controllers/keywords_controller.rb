@@ -3,7 +3,7 @@ class KeywordsController < ApplicationController
   before_action :check_grant, only: [:new, :edit, :create,:update, :destroy]
   def batch_keywording
     for article in Article.all
-      if article.content.include?("رابط کاربری") || article.content.include?("ظاهر گرافیکی") || article.content.include?("ui") || article.content.include?("interface")
+      if article.content.include?("رابط کاربری") || article.content.include?("ظاهر گرافیکی") || article.content.include?("ui") || article.content.include?("interface") || article.content.include?("طراحی")
         @tagging = Tagging.where(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 1)
         if @tagging.blank?
           @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 1)
