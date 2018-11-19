@@ -10,9 +10,9 @@ class KeywordsController < ApplicationController
         end
       end
       if article.content.include?("سیم‌کارت") || article.content.include?("سیم ‌کارت") || article.content.include?("sim")
-        @tagging = Tagging.where(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 21)
+        @tagging = Tagging.where(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 20)
         if @tagging.blank?
-          @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 21)
+          @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 20)
         end
       end
       if article.content.include?("ایرانسل")
