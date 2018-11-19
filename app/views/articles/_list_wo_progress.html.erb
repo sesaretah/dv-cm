@@ -27,7 +27,7 @@
       </td>
       <td>
         <div class="small text-muted">
-          <%= truncate(article.content, length: 30)%>
+          <%=  truncate(strip_tags(article.content), length: 30)%>
         </div>
       </td>
       <td>
