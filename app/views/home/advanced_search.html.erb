@@ -56,7 +56,7 @@
         <%end%>
       </div>
       <div class="card-body">
-        <% if @model_results.blank%>
+        <% if @model_results.blank?%>
         <%=t :nothing_found%>
         <%else%>
         <% for result in @model_results%>
