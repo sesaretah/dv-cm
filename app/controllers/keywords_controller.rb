@@ -87,7 +87,7 @@ class KeywordsController < ApplicationController
           @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 22)
         end
       end
-      if article.content.include?("بهتر میشه") || article.content.include?("لطفا")
+      if (article.content.include?("بهتر میشه") || article.content.include?("لطفا")) && (!article.content.include?("لطفا صبر"))
         @tagging = Tagging.where(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 19)
         if @tagging.blank?
           @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 19)
