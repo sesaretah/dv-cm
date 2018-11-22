@@ -33,7 +33,7 @@ class KeywordsController < ApplicationController
           @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 4)
         end
       end
-      if (article.content.include?("حساب") || article.content.include?("account") ||  article.content.include?("اکانت") || article.content.include?("پسورد") || article.content.include?("کد امنیتی") || article.content.include?("رمز جدید")) && !(article.content.include?("حسابی"))
+      if (article.content.include?("حساب") || article.content.include?("account") ||  article.content.include?("اکانت") || article.content.include?("پسورد") || article.content.include?("کد امنیتی") || article.content.include?("رمز جدید") || article.content.include?("رمز ورود")) && !(article.content.include?("حسابی")) 
         @tagging = Tagging.where(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 8)
         if @tagging.blank?
           @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 8)
