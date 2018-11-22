@@ -75,6 +75,18 @@ class KeywordsController < ApplicationController
           @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 13)
         end
       end
+      if article.content.include?("اتصال اینترنت") || article.content.include?("اینترنت وصل") || article.content.include?("نت وصل") || article.content.include?("اتصال نت")
+        @tagging = Tagging.where(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 21)
+        if @tagging.blank?
+          @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 21)
+        end
+      end
+      if article.content.include?("فیروزه") || article.content.include?("باشگاه")
+        @tagging = Tagging.where(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 22)
+        if @tagging.blank?
+          @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 22)
+        end
+      end
       if article.content.include?("بهتر میشه") || article.content.include?("لطفا")
         @tagging = Tagging.where(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 19)
         if @tagging.blank?
@@ -99,7 +111,7 @@ class KeywordsController < ApplicationController
           @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 14)
         end
       end
-      if (!article.content.include?("عالی") || !article.content.include?("Best") || !article.content.include?("خوب")) && (article.content.include?("افتضاح") || article.content.include?("آشغال") || article.content.include?("ضعیف") || article.content.include?("گدا") || article.content.include?("دزد") || article.content.include?("ریدید") || article.content.include?("اشغال") || article.content.include?("خجالت") || article.content.include?("داغون") || article.content.include?("تباه") || article.content.include?("مزخرف") || article.content.include?("ناکارآمد") || article.content.include?("بسیار بد") ||  article.content.include?("ریدم به") || article.content.include?("لعنت") || article.content.include?("کیری") || article.content.include?("به درد نخوره"))
+      if (!article.content.include?("عالی") || !article.content.include?("Best") || !article.content.include?("خوب")) && (article.content.include?("افتضاح") || article.content.include?("آشغال") || article.content.include?("ضعیف") || article.content.include?("گدا") || article.content.include?("دزد") || article.content.include?("ریدید") || article.content.include?("اشغال") || article.content.include?("خجالت") || article.content.include?("داغون") || article.content.include?("تباه") || article.content.include?("مزخرف") || article.content.include?("ناکارآمد") || article.content.include?("بسیار بد") ||  article.content.include?("ریدم به") || article.content.include?("لعنت") || article.content.include?("کیری") || article.content.include?("به درد نخوره") || article.content.include?("قابل قبولی نیست") || article.content.include?("قابل قبول نیست")  || article.content.include?("قابل قبول نیست"))
         @tagging = Tagging.where(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 15)
         if @tagging.blank?
           @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 15)
