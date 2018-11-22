@@ -3,7 +3,7 @@ class KeywordsController < ApplicationController
   before_action :check_grant, only: [:new, :edit, :create,:update, :destroy]
   def batch_keywording
     for article in Article.all
-      if article.content.include?("رابط کاربری") || article.content.include?("ظاهر گرافیکی") || article.content.include?("ui") || article.content.include?("interface") || article.content.include?("طراحی") || article.content.include?("طراح")
+      if article.content.include?("رابط کاربری") || article.content.include?("ظاهر گرافیکی") || article.content.include?("ui") ||  article.content.include?("UI") || article.content.include?("UX") || article.content.include?("Ui") || article.content.include?("interface") || article.content.include?("طراحی") || article.content.include?("طراح")
         @tagging = Tagging.where(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 1)
         if @tagging.blank?
           @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 1)
@@ -21,7 +21,7 @@ class KeywordsController < ApplicationController
           @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 6)
         end
       end
-      if (article.content.include?("بسته ")) && (!article.content.include?("بسته شد") || !article.content.include?("بسته میشه") || !article.content.include?("بسته می شود"))
+      if (article.content.include?("بسته ") || article.content.include?("شبانه") || article.content.include?("روزانه")) && !(article.content.include?("بسته شد") || article.content.include?("بسته میشه") || article.content.include?("بسته می شود"))
         @tagging = Tagging.where(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 7)
         if @tagging.blank?
           @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 7)
