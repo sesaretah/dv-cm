@@ -105,7 +105,7 @@ class KeywordsController < ApplicationController
           @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 17)
         end
       end
-      if (article.content.include?("تشکر") || article.content.include?("بهتر شده")  || article.content.include?("مفیدیه") || article.content.include?("کاملیه") || article.content.include?("کامله") || article.content.include?("کامل است") || article.content.include?("مفید است") || article.content.include?("عالی") || article.content.include?("Best") || article.content.include?("خوب")) && (!article.content.include?("افتضاح") || !article.content.include?("آشغال") || !article.content.include?("ضعیف") || !article.content.include?("گدا") || !article.content.include?("ضعیفه"))
+      if (article.content.include?("تشکر") || article.content.include?("بهتر شده")  || article.content.include?("مفیدیه") || article.content.include?("کاملیه") || article.content.include?("کامله") || article.content.include?("کامل است") || article.content.include?("مفید است") || article.content.include?("عالی") || article.content.include?("Best") || article.content.include?("خوب")) && not (article.content.include?("افتضاح") || article.content.include?("آشغال") || article.content.include?("ضعیف") || article.content.include?("گدا") || article.content.include?("ضعیفه"))
         @tagging = Tagging.where(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 14)
         if @tagging.blank?
           @tagging = Tagging.create(taggable_type: 'Article', taggable_id: article.id, target_type: 'Keyword' ,target_id: 14)
