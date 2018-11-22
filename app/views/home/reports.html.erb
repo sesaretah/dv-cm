@@ -229,7 +229,14 @@
       <div id="chart-bar" style="height: 16rem"></div>
     </div>
   </div>
-  <% @s = Tagging.where('taggable_type = ? AND target_type = ? AND target_id NOT IN (?)', 'Article', 'Keyword', [14, 15]).group(:target_id).count('id')%>
+
+  <% @p, @s, @title, @n = [], [], [], []%>
+  <% for keyword in Keyword.where('id NOT IN (?)', [14, 15])%>
+  <% @title << keyword.title%>
+  <% @s << Tagging.where('taggable_type = ? AND target_type = ? AND target_id = ?', 'Article', 'Keyword', keyword.id).count%>
+  <% @p << Tagging.where('target_id IN (?)', [14, keyword.id]).group(:taggable_id).having('count(target_id) > 1').pluck(:taggable_id).count%>
+  <% @n << Tagging.where('target_id IN (?)', [15, keyword.id]).group(:taggable_id).having('count(target_id) > 1').pluck(:taggable_id).count%>
+  <%end%>
   <script>
       $(document).ready(function(){
         var chart = c3.generate({
@@ -238,26 +245,39 @@
             columns: [
 
                 // each columns data
-              ['data1', <%= @s.values.join(',')%>]
+              ['data1', <%= @s.join(',')%>],
+              ['data2', <%= @p.join(',')%>],
+              ['data3', <%= @n.join(',')%>]
             ],
+
             type: 'bar', // default type of chart
+            groups: [
+              [ 'data1', 'data2', 'data3']
+            ],
             colors: {
-              'data1': tabler.colors["black"]
+              'data1': tabler.colors["gray"],
+              'data2': tabler.colors["pink"],
+              'data3': tabler.colors["lime"]
             },
             names: {
                 // name of each serie
-              'data1': '<%=t :keywords%>',
+                'data1': ' <%=t :neutral%>',
+                'data3': ' <%=t :negative%>',
+                'data2': ' <%=t :positive%>'
             }
           },
           axis: {
             x: {
               type: 'category',
               // name of each category
-              categories: [<%=raw @s.keys.map { |i| "'" + Keyword.find(i).title + "'" }.join(",")%>]
+              categories: [<%=raw @title.map { |i| "'" + i + "'" }.join(",")%>]
             },
           },
           legend: {
                     show: false, //hide legend
+          },
+          bar: {
+            width: 16
           },
           padding: {
             bottom: 0,
