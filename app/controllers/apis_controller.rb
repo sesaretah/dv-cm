@@ -3,11 +3,12 @@ class ApisController < ApplicationController
     if: Proc.new { |c| c.request.format =~ %r{application/json} }
   before_action :authenticate_user!, :except => [:comments_api]
   def comments_api
-    logger.debug params.inspect
+    @article = Article.where(content: params[:content]).first
+    if @article.blank?
     if !params[:content].blank?
-      @article = Article.new
-      @article.content = params[:content]
-      @article.save
+        @article = Article.new
+        @article.content = params[:content]
+        @article.save
     else
     #  render :json => {result: 'error', description: 'Content cannot be blank!'}.to_json
     end
@@ -30,7 +31,7 @@ class ApisController < ApplicationController
       end
       @contribution = Contribution.create(role_id: @role.id, profile_id: @profile.id, article_id: @article.id)
     end
-  #  render :json =>  {result: 'success'}.to_json
+  end
   end
 
 end
