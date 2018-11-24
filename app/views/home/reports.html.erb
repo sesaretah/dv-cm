@@ -1,4 +1,56 @@
 <div class='row'>
+  <div class="col-lg-12 col-xl-12">
+    <%= form_tag '/home/reports', method: :get , class: 'card' do |f| %>
+      <% if @start_date.blank?%>
+      <% @start = JalaliDate.to_jalali(Time.now)%>
+      <%else%>
+      <% @start = JalaliDate.to_jalali(@start_date)%>
+      <%end%>
+      <div class="card-body">
+        <div class="col-lg-5 col-xl-5">
+          <label  class="form-label"><%=t :start_date%></label>
+          <div class="row gutters-xs">
+
+            <div class='col-4'>
+              <%= select_tag  "start_dd", options_for_select(1..31, @start.day), {class: "form-control"} %>
+            </div>
+            <div class='col-4'>
+              <%= select_tag "start_mm", options_for_select(1..12, @start.month), {class: "form-control"} %>
+            </div>
+            <div class='col-4'>
+              <%= select_year(@start.year, {:start_year => 1360, :end_year => 1400}, {class: "form-control", :name =>"start_yyyy"}) %>
+            </div>
+          </div>
+        </div>
+        <% if @end_date.blank?%>
+        <% @end = JalaliDate.to_jalali(Time.now)%>
+        <%else%>
+        <% @end = JalaliDate.to_jalali(@end_date)%>
+        <%end%>
+        <div class="col-lg-5 col-xl-5">
+          <label  class="form-label"><%=t :end_date%></label>
+          <div class="row gutters-xs">
+
+            <div class='col-4'>
+              <%= select_tag  "end_dd", options_for_select(1..31, @end.day), {class: "form-control"} %>
+            </div>
+            <div class='col-4'>
+              <%= select_tag "end_mm", options_for_select(1..12, @end.month), {class: "form-control"} %>
+            </div>
+            <div class='col-4'>
+              <%= select_year(@end.year, {:start_year => 1360, :end_year => 1400}, {class: "form-control", :name =>"end_yyyy"}) %>
+            </div>
+          </div>
+        </div>
+
+      <div class="card-footer text-right">
+        <button type="submit" class="btn btn-primary"><%=t :show%></button>
+      </div>
+        </div>
+    <%end%>
+  </div>
+</div>
+<div class='row'>
   <div class="col-lg-6 col-xl-6">
     <div class="card">
       <div class="card-header">
@@ -8,7 +60,7 @@
         <div id="chart-pie" style="height: 16rem"></div>
       </div>
     </div>
-    <% @t = Tagging.where('taggable_type = ? AND target_type = ? AND target_id NOT IN (?)', 'Article', 'Keyword', [14, 15]).group(:target_id).order('count_id desc').count('id')%>
+    <% @t = Tagging.where('taggable_type = ? AND taggable_id IN (?) AND target_type = ? AND target_id NOT IN (?)', 'Article', @article_ids,'Keyword', [14, 15]).group(:target_id).order('count_id desc').count('id')%>
     <script>
     function randomValueOf( obj ) {
       var keys = Object.keys(obj);
@@ -53,105 +105,105 @@
     </script>
   </div>
   <div class="col-lg-6 col-xl-6">
-  <div class="card">
-    <div class="card-header">
-      <h3 class="card-title"><%=t :tones%></h3>
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><%=t :tones%></h3>
+      </div>
+      <div class="card-body">
+        <div id="chart-donut" style="height: 16rem"></div>
+      </div>
     </div>
-    <div class="card-body">
-      <div id="chart-donut" style="height: 16rem"></div>
-    </div>
-  </div>
-  <% @positive = Tagging.where(taggable_type: 'Article', target_type: 'Keyword', target_id: 14 ).count%>
-  <% @negative = Tagging.where(taggable_type: 'Article', target_type: 'Keyword', target_id: 15 ).count%>
-  <% @neutral = Tagging.where('taggable_type = ? AND target_type = ? AND target_id NOT IN (?)', 'Article', 'Keyword', [14,15]).count%>
-  <script>
-      $(document).ready(function(){
-        var chart = c3.generate({
-          bindto: '#chart-donut', // id of chart wrapper
-          data: {
-            columns: [
-                // each columns data
-              ['data0', <%= @neutral%>],
-              ['data1', <%= @negative%>],
-              ['data2', <%= @positive%>]
-            ],
-            type: 'donut', // default type of chart
-            colors: {
-              'data0': tabler.colors["gray"],
-              'data1': tabler.colors["red-light"],
-              'data2': tabler.colors["green-light"]
-            },
-            names: {
-                // name of each serie
-              'data0': '<%=t :neutral%>',
-              'data1': '<%=t :negative%>',
-              'data2': '<%=t :positive%>'
-            }
+    <% @positive = Tagging.where('taggable_type = ? AND taggable_id IN (?) AND target_type = ? AND target_id = ?', 'Article', @article_ids , 'Keyword', 14 ).count%>
+    <% @negative = Tagging.where('taggable_type = ? AND taggable_id IN (?) AND target_type = ? AND target_id = ?', 'Article', @article_ids , 'Keyword', 15).count%>
+    <% @neutral = Tagging.where('taggable_type = ? AND taggable_id IN (?) AND target_type = ? AND target_id NOT IN (?)', 'Article', @article_ids,'Keyword', [14,15]).count%>
+    <script>
+    $(document).ready(function(){
+      var chart = c3.generate({
+        bindto: '#chart-donut', // id of chart wrapper
+        data: {
+          columns: [
+            // each columns data
+            ['data0', <%= @neutral%>],
+            ['data1', <%= @negative%>],
+            ['data2', <%= @positive%>]
+          ],
+          type: 'donut', // default type of chart
+          colors: {
+            'data0': tabler.colors["gray"],
+            'data1': tabler.colors["red-light"],
+            'data2': tabler.colors["green-light"]
           },
-          axis: {
-          },
-          legend: {
-                    show: false, //hide legend
-          },
-          padding: {
-            bottom: 0,
-            top: 0
-          },
-        });
+          names: {
+            // name of each serie
+            'data0': '<%=t :neutral%>',
+            'data1': '<%=t :negative%>',
+            'data2': '<%=t :positive%>'
+          }
+        },
+        axis: {
+        },
+        legend: {
+          show: false, //hide legend
+        },
+        padding: {
+          bottom: 0,
+          top: 0
+        },
       });
-  </script>
-</div>
+    });
+    </script>
+  </div>
 
 </div>
 <div class='row'>
   <div class="col-lg-12">
-   <div class="card">
-     <div class="card-header">
-       <h3 class="card-title"><%=t :comments_date_histogram%></h3>
-     </div>
-     <div class="card-body">
-       <div id="chart-spline" style="height: 16rem"></div>
-     </div>
-   </div>
-   <% @dating = Dating.group(:event_date).order('event_date desc').count('id')%>
-   <script>
-       $(document).ready(function(){
-         var chart = c3.generate({
-           bindto: '#chart-spline', // id of chart wrapper
-           data: {
-             columns: [
-               ['data1', <%= @dating.values.join(',')%>]
-                 // each columns data
-                         ],
-             labels: true,
-             type: 'spline', // default type of chart
-             colors: {
-               'data1': tabler.colors["green"]
-             },
-             names: {
-                 // name of each serie
-               'data1': '<%=t :comment_date%>',
-             }
-           },
-           axis: {
-             x: {
-               type: 'category',
-               // name of each category
-               categories: [<%= raw @dating.keys.map{ |e| "'#{e}'" }.join(',')%>]
-             },
-           },
-           legend: {
-                     show: false, //hide legend
-           },
-           padding: {
-             bottom: 0,
-             top: 0
-           },
-         });
-       });
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><%=t :comments_date_histogram%></h3>
+      </div>
+      <div class="card-body">
+        <div id="chart-spline" style="height: 16rem"></div>
+      </div>
+    </div>
+    <% @dating = Dating.where('article_id IN (?)', @article_ids).group(:event_date).order('event_date desc').count('id')%>
+    <script>
+    $(document).ready(function(){
+      var chart = c3.generate({
+        bindto: '#chart-spline', // id of chart wrapper
+        data: {
+          columns: [
+            ['data1', <%= @dating.values.join(',')%>]
+            // each columns data
+          ],
+          labels: true,
+          type: 'spline', // default type of chart
+          colors: {
+            'data1': tabler.colors["green"]
+          },
+          names: {
+            // name of each serie
+            'data1': '<%=t :comment_date%>',
+          }
+        },
+        axis: {
+          x: {
+            type: 'category',
+            // name of each category
+            categories: [<%= raw @dating.keys.map{ |e| "'#{e}'" }.join(',')%>]
+          },
+        },
+        legend: {
+          show: false, //hide legend
+        },
+        padding: {
+          bottom: 0,
+          top: 0
+        },
+      });
+    });
 
- </script>
- </div>
+    </script>
+  </div>
 </div>
 <div class="row">
 
@@ -166,9 +218,9 @@
     </div>
     <% @ends, @notends, @titles = [],[],[]%>
     <% for workflow in Workflow.all%>
-      <% @ends << Article.where('workflow_state_id IN (?)', workflow.end_states).count%>
-      <% @notends << Article.where('workflow_state_id IN (?)', workflow.not_end_states).count%>
-      <% @titles << workflow.title%>
+    <% @ends << Article.where('workflow_state_id IN (?) AND id IN (?)', workflow.end_states, @article_ids).count%>
+    <% @notends << Article.where('workflow_state_id IN (?) AND id IN (?)', workflow.not_end_states, @article_ids).count%>
+    <% @titles << workflow.title%>
     <%end%>
     <script>
     $(document).ready(function(){
@@ -199,9 +251,9 @@
           x: {
             type: 'category',
             tick: {
-               multiline: false
-           },
-           categories: [<%=raw @titles.map { |i| "'" + i.to_s + "'" }.join(",")%>]
+              multiline: false
+            },
+            categories: [<%=raw @titles.map { |i| "'" + i.to_s + "'" }.join(",")%>]
           },
         },
         bar: {
@@ -221,70 +273,70 @@
   </div>
 
   <div class="col-lg-6 col-xl-6">
-  <div class="card">
-    <div class="card-header">
-      <h3 class="card-title"><%=t :keywordـrepetitions%></h3>
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><%=t :keywordـrepetitions%></h3>
+      </div>
+      <div class="card-body">
+        <div id="chart-bar" style="height: 16rem"></div>
+      </div>
     </div>
-    <div class="card-body">
-      <div id="chart-bar" style="height: 16rem"></div>
-    </div>
-  </div>
 
-  <% @p, @s, @title, @n = [], [], [], []%>
-  <% for keyword in Keyword.where('id NOT IN (?)', [14, 15])%>
-  <% @title << keyword.title%>
-  <% @s << Tagging.where('taggable_type = ? AND target_type = ? AND target_id = ?', 'Article', 'Keyword', keyword.id).count%>
-  <% @p << Tagging.where('target_id IN (?)', [14, keyword.id]).group(:taggable_id).having('count(target_id) > 1').pluck(:taggable_id).count%>
-  <% @n << Tagging.where('target_id IN (?)', [15, keyword.id]).group(:taggable_id).having('count(target_id) > 1').pluck(:taggable_id).count%>
-  <%end%>
-  <script>
-      $(document).ready(function(){
-        var chart = c3.generate({
-          bindto: '#chart-bar', // id of chart wrapper
-          data: {
-            columns: [
+    <% @p, @s, @title, @n = [], [], [], []%>
+    <% for keyword in Keyword.where('id NOT IN (?)', [14, 15])%>
+    <% @title << keyword.title%>
+    <% @s << Tagging.where('taggable_type = ? AND taggable_id IN (?) AND target_type = ? AND target_id = ?', 'Article', @article_ids , 'Keyword', keyword.id).count%>
+    <% @p << Tagging.where('target_id IN (?)  AND taggable_id IN (?)', [14, keyword.id], @article_ids).group(:taggable_id).having('count(target_id) > 1').pluck(:taggable_id).count%>
+    <% @n << Tagging.where('target_id IN (?)  AND taggable_id IN (?)', [15, keyword.id], @article_ids).group(:taggable_id).having('count(target_id) > 1').pluck(:taggable_id).count%>
+    <%end%>
+    <script>
+    $(document).ready(function(){
+      var chart = c3.generate({
+        bindto: '#chart-bar', // id of chart wrapper
+        data: {
+          columns: [
 
-                // each columns data
-              ['data1', <%= @s.join(',')%>],
-              ['data2', <%= @p.join(',')%>],
-              ['data3', <%= @n.join(',')%>]
-            ],
+            // each columns data
+            ['data1', <%= @s.join(',')%>],
+            ['data2', <%= @p.join(',')%>],
+            ['data3', <%= @n.join(',')%>]
+          ],
 
-            type: 'bar', // default type of chart
-            groups: [
-              [ 'data1', 'data2', 'data3']
-            ],
-            colors: {
-              'data1': tabler.colors["gray"],
-              'data2': tabler.colors["pink"],
-              'data3': tabler.colors["lime"]
-            },
-            names: {
-                // name of each serie
-                'data1': ' <%=t :neutral%>',
-                'data3': ' <%=t :negative%>',
-                'data2': ' <%=t :positive%>'
-            }
+          type: 'bar', // default type of chart
+          groups: [
+            [ 'data1', 'data2', 'data3']
+          ],
+          colors: {
+            'data1': tabler.colors["gray"],
+            'data2': tabler.colors["pink"],
+            'data3': tabler.colors["lime"]
           },
-          axis: {
-            x: {
-              type: 'category',
-              // name of each category
-              categories: [<%=raw @title.map { |i| "'" + i + "'" }.join(",")%>]
-            },
+          names: {
+            // name of each serie
+            'data1': ' <%=t :neutral%>',
+            'data3': ' <%=t :negative%>',
+            'data2': ' <%=t :positive%>'
+          }
+        },
+        axis: {
+          x: {
+            type: 'category',
+            // name of each category
+            categories: [<%=raw @title.map { |i| "'" + i + "'" }.join(",")%>]
           },
-          legend: {
-                    show: false, //hide legend
-          },
-          bar: {
-            width: 16
-          },
-          padding: {
-            bottom: 0,
-            top: 0
-          },
-        });
+        },
+        legend: {
+          show: false, //hide legend
+        },
+        bar: {
+          width: 16
+        },
+        padding: {
+          bottom: 0,
+          top: 0
+        },
       });
-  </script>
-</div>
+    });
+    </script>
+  </div>
 </div>
