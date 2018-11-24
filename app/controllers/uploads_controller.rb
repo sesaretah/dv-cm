@@ -31,10 +31,16 @@ class UploadsController < ApplicationController
   # POST /uploads.json
   def create
     @upload = Upload.new(upload_params)
-        @upload.attachment = params[:file]
+    if !params[:file].blank?
+      @upload.attachment = params[:file]
+    end
     respond_to do |format|
       if @upload.save
-        format.html { redirect_to @upload, notice: 'Upload was successfully created.' }
+        if @upload.attachment_type != 'batch_article_attachment'
+          format.html { redirect_to @upload, notice: 'Upload was successfully created.' }
+        else
+          format.html { redirect_to '/articles/batch_upload/1', notice: t(:file_uploaded_successfully_we_will_get_back_to_you_after_processing) }
+        end
         format.json { render :show, status: :created, location: @upload }
       else
         format.html { render :new }

@@ -326,6 +326,7 @@ fa:
     page_gap: "&hellip;"
     previous_label: "قبلی"
     next_label: "بعدی"
+  file_uploaded_successfully_we_will_get_back_to_you_after_processing: 'فایل با موفقیت بارگزاری شد و در حال پردازش است'
   please_choose_an_excel_file: 'لطفا فایل اکسل مورد نظر را انتخاب کنید'
   upload: 'بارگزاری'
   start_date: 'تاریخ شروع'
