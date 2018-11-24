@@ -326,6 +326,8 @@ fa:
     page_gap: "&hellip;"
     previous_label: "قبلی"
     next_label: "بعدی"
+  please_choose_an_excel_file: 'لطفا فایل اکسل مورد نظر را انتخاب کنید'
+  upload: 'بارگزاری'
   start_date: 'تاریخ شروع'
   end_date: 'تاریخ پایان'
   nothing_found: 'سندی پیدا نشد'

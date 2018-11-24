@@ -2,42 +2,7 @@
   <div class="col-lg-3 ">
     <div class="row">
       <div class="col-md-6 col-lg-12">
-        <%= form_tag '/home/advanced_search', method: :get, class:'card' do -%>
-        <div class="card-body">
-          <div class="form-group">
-            <% for result in @group_results%>
-            <% if !result[1].blank?%>
-            <div class="form-label"><%=t result[0].underscore.pluralize%></div>
-            <% result[1].each_with_group_and_count do |r, group, count| %>
-            <div class="custom-controls-stacked">
-              <label class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" name="<%= result[0]%>_<%= group%>" value="<%= group%>" <% if params["#{result[0]}_#{group}"]%> checked<%end%>>
-                <span class="custom-control-label" style='padding-top: 4px;padding-right: 22px;'>
-                  <%= result[0].classify.constantize.find_by_id(group).title%> (<%= count%>)
-                </span>
-              </label>
-            </div>
-            <%end%>
-            <%end%>
-            <%end%>
-          </div>
-          <%= hidden_field_tag :q, params[:q]%>
-        </div>
-        <div class="card-footer">
-          <div class="text-center">
-            <button type="button" id='clear' class="btn btn-gray btn-sm"><i class="fe fe-delete" style="vertical-align:-3px;"></i> <%=t :clear%> </button>
-            <button type="submit" class="btn btn-lime btn-sm"><i class="fe fe-filter" style="vertical-align:-3px;"></i> <%=t :filter%> </button>
-          </div>
-        </div>
-        <script>
-        $(document).ready(function() {
-          $( "#clear" ).on("click", function(){
-            $('input:checkbox').removeAttr('checked');
-            $(this).val('check all');
-          })
-        });
-        </script>
-        <%end%>
+
       </div>
     </div>
   </div>
@@ -69,7 +34,13 @@
         <hr class='mt-1 mb-1' />
         <%end%>
         <%end%>
+
       </div>
+      <% if defined?(@model_results.total_pages)%>
+      <div class="digg_pagination  mb-2 mt-2 mr-auto ml-auto">
+          <%= will_paginate @model_results %>
+      </div>
+      <%end%>
     </div>
   </div>
 </div>

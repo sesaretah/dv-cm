@@ -1,0 +1,30 @@
+<div class="row row-cards row-deck">
+  <div class="col-lg-3">
+    <div class="row">
+      <div class="col-md-6 col-lg-12">
+        <div class="card">
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-9">
+    <div class="card">
+      <div class="card-body">
+        <%= form_for Upload.new,html: { multipart: true } do |f| %>
+        <div class="form-group">
+          <div class="form-label"><%=t :please_choose_an_excel_file%></div>
+          <%= f.file_field :attachment %><br>
+          <%= f.hidden_field :uploadable_type, value: 'Batch'%>
+          <%= f.hidden_field :uploadable_id, value: 1%>
+          <%= f.hidden_field :attachment_type, value: 'batch_article_attachment'%>
+        </div>
+          <div class="card-footer text-right">
+            <button type="submit" class="btn btn-primary"><%=t :upload%></button>
+          </div>
+
+        <% end %>
+        </div>
+    </div>
+  </div>
+</div>

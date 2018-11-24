@@ -70,6 +70,9 @@ Rails.application.routes.draw do
   match "/articles/search/:id" => "articles#search", :via => :get
   match "/articles/article_states/:id" => "articles#article_states", :via => :get
   match "/articles/article_comments/:id" => "articles#article_comments", :via => :get
+  match "/articles/batch_upload/:id" => "articles#batch_upload", :via => :get
+
+
 
   match "/workflows/related_articles/:id" => "workflows#related_articles", :via => :get
 
