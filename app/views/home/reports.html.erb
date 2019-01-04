@@ -165,7 +165,7 @@
         <div id="chart-spline" style="height: 16rem"></div>
       </div>
     </div>
-    <% @dating = Dating.where('article_id IN (?)', @article_ids).group(:event_date).order('event_date desc').count('id')%>
+    <% @dating = Dating.where('article_id IN (?)', @article_ids).group(:event_date).order('event_date').count('id')%>
     <script>
     $(document).ready(function(){
       var chart = c3.generate({
@@ -176,7 +176,7 @@
             // each columns data
           ],
           labels: true,
-          type: 'spline', // default type of chart
+          type: 'area-step', // default type of chart
           colors: {
             'data1': tabler.colors["green"]
           },
@@ -188,7 +188,7 @@
         axis: {
           x: {
             type: 'category',
-            // name of each category
+            show:false,
             categories: [<%= raw @dating.keys.map{ |e| "'#{e}'" }.join(',')%>]
           },
         },
@@ -339,4 +339,27 @@
     });
     </script>
   </div>
+
+<div class="col-lg-12 col-xl-12">
+  <div class="card">
+    <div class="card-body" >
+      <div id="cloud" style="min-height: 350px" ></div>
+    </div>
+  </div>
+  <script type="text/javascript">
+
+
+    var words = [
+
+    <% for keyword in Keyword.all%>
+    <% @count = Tagging.where('taggable_type = ? AND target_type = ? AND target_id = ?', 'Article', 'Keyword', keyword.id).count%>
+    <% if @count > 0 && keyword.id != 14 && keyword.id != 15%>
+    {text: "<%= keyword.title%>", weight: <%= @count%>, link: '/keywords/<%= keyword.id%>'},
+    <%end%>
+    <%end%>
+];
+
+$('#cloud').jQCloud(words);
+  </script>
+</div>
 </div>

@@ -34,7 +34,7 @@
           </tr>
         </thead>
         <tbody>
-          <% @keywords.each do |keyword| %>
+          <% @keywords.order(:title).each do |keyword| %>
           <tr>
             <td class="text-center">
               <div class="item-action dropdown">
