@@ -11,7 +11,10 @@ class HomeController < ApplicationController
       @dating_ids = Dating.where('event_date <= ? AND event_date >= ?', @end_date, @start_date).pluck(:article_id)
       @article_ids = Article.where('id IN (?)', @dating_ids).pluck(:id)
     else
-      @article_ids = Article.all.pluck(:id)
+      @dating_ids = Dating.where('event_date <= ? AND event_date >= ?', 4.month.ago.beginning_of_month, Date.today).pluck(:article_id)
+      @start_date = 4.month.ago.beginning_of_month
+      @end_date =  Date.today
+      @article_ids = Article.where('id IN (?)', @dating_ids).pluck(:id)
     end
   end
   def email_sent
