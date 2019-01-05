@@ -11,7 +11,7 @@ class HomeController < ApplicationController
       @dating_ids = Dating.where('event_date <= ? AND event_date >= ?', @end_date, @start_date).pluck(:article_id)
       @article_ids = Article.where('id IN (?)', @dating_ids).pluck(:id)
     else
-      @dating_ids = Dating.where('event_date <= ? AND event_date >= ?', 4.month.ago.beginning_of_month, Date.today).pluck(:article_id)
+      @dating_ids = Dating.where('event_date <= ? AND event_date >= ?',  Date.today, 4.month.ago.beginning_of_month).pluck(:article_id)
       @start_date = 4.month.ago.beginning_of_month
       @end_date =  Date.today
       @article_ids = Article.where('id IN (?)', @dating_ids).pluck(:id)
